@@ -1,23 +1,34 @@
 package edu.northeastern.grading.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Marks {
-    private final List<Map<GradingCriteria, Double>> marks = new ArrayList<>();
+    private final Map<GradingCriteria, List<AbstractMap.SimpleEntry<Double, Double>>> marksMap = new HashMap<>();
 
-    public List<Map<GradingCriteria, Double>> getMarks() {
-        return new ArrayList<>(marks);
+    public Map<GradingCriteria, List<AbstractMap.SimpleEntry<Double, Double>>> getMarks() {
+        return new HashMap<>(marksMap);
     }
 
-    private double participation = 0;
+    public void addMarks(GradingCriteria gradingCriteria, double marks, double outOf) {
+        /*if (gradingCriteria.equals(GradingCriteria.PARTICIPATION)) {
+            marksMap.put(gradingCriteria, Collections.singletonList(marks));
+            return;
+        }*/
+        if (marksMap.containsKey(gradingCriteria)) {
+            marksMap.get(gradingCriteria).add(new AbstractMap.SimpleEntry<>(marks, outOf));
+        } else {
+            List<AbstractMap.SimpleEntry<Double, Double>> marksList = new ArrayList<>();
+            marksList.add(new AbstractMap.SimpleEntry<>(marks, outOf));
+            marksMap.put(gradingCriteria, marksList);
+        }
+    }
 
-    public Double getBestOf(List<Double> marksList, int consideredCount){
-        List<Double> marksListCopy = new ArrayList<>(marksList);
-        marksListCopy.sort(Collections.reverseOrder());
-        return marksListCopy.stream().mapToDouble(Double::doubleValue).limit(consideredCount).average().getAsDouble();
+    public OptionalDouble getBestOf(GradingCriteria gradingCriteria, int consideredCount) {
+        return marksMap.get(gradingCriteria).stream()
+                .mapToDouble(item->item.getKey()/item.getValue()).boxed()
+                .sorted(Comparator.reverseOrder())
+                .limit(consideredCount == -1 ? marksMap.get(gradingCriteria).size() : consideredCount)
+                .mapToDouble(Double::doubleValue).average();
     }
 
 

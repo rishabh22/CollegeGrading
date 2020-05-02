@@ -8,12 +8,12 @@ public class StudentGrades {
     private Marks marks;
     private Course course;
 
-    public Double getAggregate(){
-        return marks.getBestOf(marks.getAssignmentMarks(),course.getConsideredAssignmentCount()) * course.getAssignmentWeightage()
-                + marks.getBestOf(marks.getQuizMarks(),course.getConsideredQuizCount()) * course.getQuizWeightage()
-                + marks.getBestOf(marks.getMidTermExamMarks(),course.getConsideredMidTermExamCount()) * course.getMidTermExamWeightage()
-                + marks.getBestOf(marks.getProjectMarks(),course.getConsideredProjectCount()) * course.getProjectWeightage()
-                + marks.getBestOf(marks.getFinalExamMarks(),course.getConsideredFinalExamCount()) * course.getFinalExamWeightage()
-                + marks.getParticipation() * course.getParticipationWeightage();
+    public Double getAggregate() {
+        return marks.getMarks().entrySet().stream()
+                .mapToDouble(
+                        mark ->
+                                marks.getBestOf(mark.getKey(), course.getCriteriaVsCounted().get(mark.getKey())).getAsDouble()
+                                        * course.getCriteriaVsWeightagePercentage().get(mark.getKey())
+                ).average().getAsDouble();
     }
 }

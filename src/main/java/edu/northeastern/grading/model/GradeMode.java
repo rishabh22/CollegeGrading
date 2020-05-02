@@ -1,7 +1,8 @@
 package edu.northeastern.grading.model;
 
 public enum GradeMode {
-    ABSOLUTE,
+    ABSOLUTE_AUTO,
+    ABSOLUTE_CUSTOM,
     RELATIVE,
     MIXED
 }

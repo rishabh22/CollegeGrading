@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.List;
 import java.util.Set;
 
 public class Application extends javafx.application.Application {
@@ -15,6 +14,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        app = SharedContext.getInstance();
         stage.setTitle("Grading System");
 
         createTestData();
@@ -33,8 +33,9 @@ public class Application extends javafx.application.Application {
     }
 
     private void createTestData() {
-        Course.CourseBuilder courseBuilder = Course.getBuilder("Program Structures and Algorithms");
-        courseBuilder.setConsideredCounts(-1,-1,-1,-1,-1);
+        Course.CourseBuilder courseBuilder = Course.getBuilder("Program Structures and Algorithms", GradeMode.ABSOLUTE_AUTO, true);
+
+        courseBuilder.addCriteria(GradingCriteria.ASSIGNMENT, 3);
         Course course = courseBuilder.getInstance();
 
         Student student = new Student("001300579", "Rishabh Sood");
@@ -45,19 +46,18 @@ public class Application extends javafx.application.Application {
         studentGrades.setCourse(course);
 
         Marks marks = new Marks();
-        marks.setAssignmentMarks(List.of(100d,90d));
-        marks.setFinalExamMarks(List.of(100d,90d));
-        marks.setMidTermExamMarks(List.of(100d,90d));
-        marks.setProjectMarks(List.of(100d,90d));
-        marks.setQuizMarks(List.of(100d,90d));
-        marks.setParticipation(100);
+        marks.addMarks(GradingCriteria.ASSIGNMENT, 90, 100);
+        marks.addMarks(GradingCriteria.ASSIGNMENT, 95, 100);
+
+        studentGrades.setMarks(marks);
+
 
         Set<RankingTableModel> rankingTable = app.getRankingTable();
 
         RankingTableModel rankingTableModel = new RankingTableModel();
         rankingTableModel.setStudent(student);
         rankingTableModel.setWeightedTotalPercentage(studentGrades.getAggregate());
-        rankingTable.add(rankingTableModel);
+        app.addToRankingTable(rankingTableModel);
 
 
     }
