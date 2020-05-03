@@ -13,7 +13,7 @@ public class StudentGrades {
                 .mapToDouble(
                         mark ->
                                 marks.getBestOf(mark.getKey(), course.getCriteriaVsCounted().get(mark.getKey())).getAsDouble()
-                                        * course.getCriteriaVsWeightagePercentage().get(mark.getKey())
-                ).average().getAsDouble();
+                                        * course.getCriteriaVsWeightagePercentage().get(mark.getKey())/100
+                ).sum();
     }
 }

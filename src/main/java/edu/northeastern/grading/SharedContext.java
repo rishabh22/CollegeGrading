@@ -21,7 +21,9 @@ public class SharedContext {
     private final List<StudentGrades> studentGradesList = new ArrayList<>();
     private final List<Grade> gradeList = new ArrayList<>();
 
-    private Set<RankingTableModel> rankingTable = new TreeSet<>(Comparator.reverseOrder());
+    private final Set<RankingTableModel> rankingTable = new TreeSet<>(Comparator.reverseOrder());
+
+    private final Map<Double, List<RankingTableModel>> rankingMap = new TreeMap<>(Comparator.reverseOrder());
 
 
     private SharedContext() {
@@ -34,10 +36,6 @@ public class SharedContext {
         }
 
         return sharedContext;
-    }
-
-    public List<Student> getStudentList() {
-        return new ArrayList<>(studentList);
     }
 
     public void addStudent(Student student) {
@@ -78,4 +76,17 @@ public class SharedContext {
     public Grade getGrade(String letter){
         return gradeList.stream().filter(grade -> grade.getLetterGrade().equalsIgnoreCase(letter)).findAny().get();
     }
+
+    public List<Student> getStudentList() {
+        return new ArrayList<>(studentList);
+    }
+
+    public List<StudentGrades> getStudentGradesList() {
+        return new ArrayList<>(studentGradesList);
+    }
+
+    public void addStudentGrade(StudentGrades studentGrades){
+        this.studentGradesList.add(studentGrades);
+    }
+
 }

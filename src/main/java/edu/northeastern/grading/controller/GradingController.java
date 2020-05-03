@@ -29,6 +29,9 @@ public class GradingController {
     @FXML
     private TableColumn<RankingTableModel, String> colStudentName;
 
+    @FXML
+    private TableColumn<RankingTableModel, String> colStudentGrade;
+
     private ObservableList<RankingTableModel> rankingTableObservableList;
 
     @FXML
@@ -56,6 +59,7 @@ public class GradingController {
     private void mapTableColumns() {
         colStudentName.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getStudent().getName()));
         colAggregate.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getWeightedTotalPercentage()));
+        colStudentGrade.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getAssignedGrade().getLetterGrade()));
     }
 
    /* @FXML

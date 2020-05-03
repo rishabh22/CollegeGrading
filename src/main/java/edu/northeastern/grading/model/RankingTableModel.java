@@ -15,6 +15,7 @@ public class RankingTableModel implements Comparable<RankingTableModel> {
     private Student student;
     //    private int rank;
     private double weightedTotalPercentage;
+    private Grade assignedGrade;
 
     @Override
     public int compareTo(RankingTableModel o) {

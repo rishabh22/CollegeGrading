@@ -12,7 +12,8 @@
         <columns>
             <TableColumn fx:id="colRank" prefWidth="80.0" text="Rank" />
           <TableColumn fx:id="colStudentName" prefWidth="170.0" text="Student" />
-          <TableColumn fx:id="colAggregate" prefWidth="186.0" text="Aggregate" />
+          <TableColumn fx:id="colAggregate" prefWidth="117.5999755859375" text="Aggregate" />
+            <TableColumn fx:id="colStudentGrade" prefWidth="75.0" text="Grade" />
         </columns>
       </TableView>
       <Button layoutX="61.0" layoutY="26.0" mnemonicParsing="false" text="BACK" />

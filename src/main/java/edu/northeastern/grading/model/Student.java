@@ -11,7 +11,12 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Student {
     private String nuid;
-    private String name;
+    private String firstName;
+    private String lastName;
+
+    public String getName(){
+        return firstName + " " + lastName;
+    }
 
     @Override
     public boolean equals(Object o) {

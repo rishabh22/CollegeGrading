@@ -108,7 +108,12 @@ public class Course {
                 double currCutOff = 100;
                 for (Grade grade : SharedContext.getInstance().getGradeList()) {
                     currCutOff -= autoGradeInterval;
-                    gradeMarksMap.put(grade, currCutOff);
+                    if(grade.equals(SharedContext.getInstance().getGrade("F"))) {
+                        gradeMarksMap.put(grade, 0D);
+                        break;
+                    } else {
+                        gradeMarksMap.put(grade, currCutOff);
+                    }
                 }
             } else if(gradingMode.equals(GradeMode.ABSOLUTE_CUSTOM)) {
                 if (gradeMarksMap == null) {

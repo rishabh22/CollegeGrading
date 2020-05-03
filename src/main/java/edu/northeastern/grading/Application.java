@@ -1,13 +1,14 @@
 package edu.northeastern.grading;
 
 import edu.northeastern.grading.model.*;
+import edu.northeastern.grading.utilities.ParseData;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Set;
+import java.util.Map;
 
 public class Application extends javafx.application.Application {
     private SharedContext app;
@@ -33,31 +34,45 @@ public class Application extends javafx.application.Application {
     }
 
     private void createTestData() {
-        Course.CourseBuilder courseBuilder = Course.getBuilder("Program Structures and Algorithms", GradeMode.ABSOLUTE_AUTO, true);
+        Course.CourseBuilder courseBuilder = Course.getBuilder("AED", GradeMode.ABSOLUTE_AUTO, false);
+        courseBuilder.setAutoAbsoluteGradeInterval(5);
+        courseBuilder.addCriteria(GradingCriteria.ASSIGNMENT, 5);
+        courseBuilder.addCriteria(GradingCriteria.QUIZ, 4);
+        courseBuilder.addCriteria(GradingCriteria.PROJECT, 1);
+        courseBuilder.addCriteria(GradingCriteria.ATTENDANCE, 1);
 
-        courseBuilder.addCriteria(GradingCriteria.ASSIGNMENT, 3);
+        courseBuilder.addWeightage(GradingCriteria.ASSIGNMENT,25);
+        courseBuilder.addWeightage(GradingCriteria.QUIZ,25);
+        courseBuilder.addWeightage(GradingCriteria.PROJECT,45);
+        courseBuilder.addWeightage(GradingCriteria.ATTENDANCE,5);
         Course course = courseBuilder.getInstance();
 
-        Student student = new Student("001300579", "Rishabh Sood");
-        app.addStudent(student);
+        ParseData parseData = new ParseData();
+        try{
+            parseData.parse(course);
+        } catch (Exception e){
+            //TODO Return could not parse data
+            e.printStackTrace();
+        }
 
-        StudentGrades studentGrades = new StudentGrades();
-        studentGrades.setStudent(student);
-        studentGrades.setCourse(course);
+        app.getStudentGradesList().forEach(studentGrades -> {
+            RankingTableModel rankingTableModel = new RankingTableModel();
+            rankingTableModel.setStudent(studentGrades.getStudent());
+            rankingTableModel.setWeightedTotalPercentage(studentGrades.getAggregate());
 
-        Marks marks = new Marks();
-        marks.addMarks(GradingCriteria.ASSIGNMENT, 90, 100);
-        marks.addMarks(GradingCriteria.ASSIGNMENT, 95, 100);
+            if(course.getGradingMode().equals(GradeMode.ABSOLUTE_AUTO)){
+                for (Map.Entry<Grade, Double> entry : course.getGradeMarksMap().entrySet()) {
+                    if (entry.getValue() != null && rankingTableModel.getWeightedTotalPercentage() > entry.getValue().doubleValue()) {
+                        rankingTableModel.setAssignedGrade(entry.getKey());
+                        break;
+                    }
+                }
+            }
 
-        studentGrades.setMarks(marks);
+            app.addToRankingTable(rankingTableModel);
+        });
 
 
-        Set<RankingTableModel> rankingTable = app.getRankingTable();
-
-        RankingTableModel rankingTableModel = new RankingTableModel();
-        rankingTableModel.setStudent(student);
-        rankingTableModel.setWeightedTotalPercentage(studentGrades.getAggregate());
-        app.addToRankingTable(rankingTableModel);
 
 
     }

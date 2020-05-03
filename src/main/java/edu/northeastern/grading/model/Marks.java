@@ -25,7 +25,7 @@ public class Marks {
 
     public OptionalDouble getBestOf(GradingCriteria gradingCriteria, int consideredCount) {
         return marksMap.get(gradingCriteria).stream()
-                .mapToDouble(item->item.getKey()/item.getValue()).boxed()
+                .mapToDouble(item->item.getKey()/item.getValue()*100).boxed()
                 .sorted(Comparator.reverseOrder())
                 .limit(consideredCount == -1 ? marksMap.get(gradingCriteria).size() : consideredCount)
                 .mapToDouble(Double::doubleValue).average();

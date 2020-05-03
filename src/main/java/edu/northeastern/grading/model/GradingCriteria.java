@@ -6,5 +6,6 @@ public enum GradingCriteria {
     PROJECT,
     MID_TERM,
     FINAL_EXAM,
-    PARTICIPATION
+    PARTICIPATION,
+    ATTENDANCE
 }
